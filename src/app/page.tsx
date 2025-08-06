@@ -153,13 +153,13 @@ export default function Home() {
                 <Button
                     variant="ghost"
                     size="icon"
-                    className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8"
+                    className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 text-muted-foreground hover:bg-accent hover:text-accent-foreground"
                     onClick={handleToggleListening}
                   >
                     {isListening ? (
                        <Mic className="h-5 w-5 text-primary" />
                     ) : (
-                       <MicOff className="h-5 w-5 text-muted-foreground" />
+                       <MicOff className="h-5 w-5" />
                     )}
                 </Button>
               </TooltipTrigger>

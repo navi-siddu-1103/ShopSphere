@@ -34,7 +34,7 @@ export const products: Product[] = [
     price: 11999.00,
     rating: 4.8,
     category: "Electronics",
-    images: ["https://placehold.co/600x400.png", "https://placehold.co/600x400.png", "https://placehold.co/600x400.png"],
+    images: ["https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", "https://images.unsplash.com/photo-1546435770-a3e426bf472b?q=80&w=2065&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", "https://images.unsplash.com/photo-1579033471374-2197a2911efa?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"],
     aiHint: "headphones",
     reviews: [
       { id: "rev1", userName: "Arjun", rating: 5, comment: "Amazing sound quality and very comfortable!" },
@@ -49,7 +49,7 @@ export const products: Product[] = [
     price: 18320.00,
     rating: 4.6,
     category: "Electronics",
-    images: ["https://placehold.co/600x400.png", "https://placehold.co/600x400.png", "https://placehold.co/600x400.png"],
+    images: ["https://images.unsplash.com/photo-1546868871-7041f2a55e12?q=80&w=1964&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", "https://images.unsplash.com/photo-1579586337278-35d9addb017d?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", "https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=1999&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"],
     aiHint: "smartwatch",
     reviews: [
         { id: "rev3", userName: "Rohan", rating: 5, comment: "Does everything I need it to. The battery life is impressive." },
@@ -64,7 +64,7 @@ export const products: Product[] = [
     price: 1279.00,
     rating: 4.9,
     category: "Books",
-    images: ["https://placehold.co/600x400.png"],
+    images: ["https://images.unsplash.com/photo-1544947950-fa07a98d237f?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"],
     aiHint: "book cover",
     reviews: [
         { id: "rev5", userName: "Vikram", rating: 5, comment: "Couldn't put it down! A masterpiece of suspense." },
@@ -78,7 +78,7 @@ export const products: Product[] = [
     price: 2760.00,
     rating: 4.7,
     category: "Books",
-    images: ["https://placehold.co/600x400.png"],
+    images: ["https://images.unsplash.com/photo-1540420773420-2850a26b685a?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"],
     aiHint: "cookbook",
   },
   {
@@ -89,7 +89,7 @@ export const products: Product[] = [
     price: 3196.00,
     rating: 4.9,
     category: "Home Goods",
-    images: ["https://placehold.co/600x400.png"],
+    images: ["https://images.unsplash.com/photo-1620858368848-8545b0a5015d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"],
     aiHint: "coffee maker",
   },
   {
@@ -100,7 +100,7 @@ export const products: Product[] = [
     price: 3999.00,
     rating: 4.5,
     category: "Home Goods",
-    images: ["https://placehold.co/600x400.png", "https://placehold.co/600x400.png"],
+    images: ["https://images.unsplash.com/photo-1616627561954-c4826bd17b6a?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", "https://images.unsplash.com/photo-1542345339-b1e67b147d3d?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"],
     aiHint: "throw blanket",
   },
   {
@@ -111,7 +111,7 @@ export const products: Product[] = [
     price: 15120.00,
     rating: 4.7,
     category: "Apparel",
-    images: ["https://placehold.co/600x400.png", "https://placehold.co/600x400.png"],
+    images: ["https://images.unsplash.com/photo-1591953901594-55536a2871b6?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", "https://images.unsplash.com/photo-1618244979848-68708d38e235?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"],
     aiHint: "jacket",
   },
   {
@@ -122,7 +122,7 @@ export const products: Product[] = [
     price: 7199.00,
     rating: 4.6,
     category: "Electronics", // This was Apparel, but a backpack with a laptop compartment fits better in Electronics or a new "Accessories" category. Let's keep it consistent with existing categories.
-    images: ["https://placehold.co/600x400.png", "https://placehold.co/600x400.png"],
+    images: ["https://images.unsplash.com/photo-1553062407-98eeb68c6a62?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", "https://images.unsplash.com/photo-1587397845856-e6cf491761e2?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"],
     aiHint: "backpack",
   },
   {
@@ -133,7 +133,7 @@ export const products: Product[] = [
     price: 7999.00,
     rating: 4.7,
     category: "Electronics",
-    images: ["https://placehold.co/600x400.png"],
+    images: ["https://images.unsplash.com/photo-1533000523153-73c38a1643c7?q=80&w=1978&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"],
     aiHint: "smart speaker",
   },
   {
@@ -144,7 +144,7 @@ export const products: Product[] = [
     price: 9600.00,
     rating: 4.4,
     category: "Apparel",
-    images: ["https://placehold.co/600x400.png", "https://placehold.co/600x400.png"],
+    images: ["https://images.unsplash.com/photo-1603808033192-082d6919d3e1?q=80&w=1935&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", "https://images.unsplash.com/photo-1589188057212-4c23393019e3?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"],
     aiHint: "leather shoes",
   },
   {
@@ -155,7 +155,7 @@ export const products: Product[] = [
     price: 4799.00,
     rating: 4.8,
     category: "Home Goods",
-    images: ["https://placehold.co/600x400.png"],
+    images: ["https://images.unsplash.com/photo-1507413245164-6160d8298b31?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"],
     aiHint: "desk lamp",
   },
   {
@@ -166,7 +166,7 @@ export const products: Product[] = [
     price: 1500.00,
     rating: 4.8,
     category: "Books",
-    images: ["https://placehold.co/600x400.png"],
+    images: ["https://images.unsplash.com/photo-1589998059171-988d887df646?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"],
     aiHint: "sci-fi book",
   },
   {
@@ -176,7 +176,7 @@ export const products: Product[] = [
     price: 3679.00,
     rating: 4.9,
     category: "Electronics",
-    images: ["https://placehold.co/600x400.png"],
+    images: ["https://images.unsplash.com/photo-1588855140131-4c3a4f6a1e5c?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"],
     aiHint: "power bank",
   },
   {
@@ -186,7 +186,7 @@ export const products: Product[] = [
     price: 1800.00,
     rating: 4.7,
     category: "Books",
-    images: ["https://placehold.co/600x400.png"],
+    images: ["https://images.unsplash.com/photo-1533560696583-644a434b931f?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"],
     aiHint: "fantasy book",
   },
   {
@@ -196,7 +196,7 @@ export const products: Product[] = [
     price: 12799.00,
     rating: 4.8,
     category: "Home Goods",
-    images: ["https://placehold.co/600x400.png"],
+    images: ["https://images.unsplash.com/photo-1618684617721-a0c7418a0e8d?q=80&w=1964&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"],
     aiHint: "knife set",
   },
   {
@@ -206,7 +206,7 @@ export const products: Product[] = [
     price: 2399.00,
     rating: 4.6,
     category: "Apparel",
-    images: ["https://placehold.co/600x400.png"],
+    images: ["https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"],
     aiHint: "t-shirt",
   },
   {
@@ -216,7 +216,7 @@ export const products: Product[] = [
     price: 3500.00,
     rating: 4.8,
     category: "Home Goods",
-    images: ["https://placehold.co/600x400.png"],
+    images: ["https://images.unsplash.com/photo-1556910110-a5a63dfd9904?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"],
     aiHint: "spice rack"
   },
   {
@@ -226,7 +226,7 @@ export const products: Product[] = [
     price: 2800.00,
     rating: 4.7,
     category: "Home Goods",
-    images: ["https://placehold.co/600x400.png"],
+    images: ["https://images.unsplash.com/photo-1591291621226-9d2b273b544a?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"],
     aiHint: "yoga mat"
   },
   {
@@ -236,7 +236,7 @@ export const products: Product[] = [
     price: 4500.00,
     rating: 4.5,
     category: "Apparel",
-    images: ["https://placehold.co/600x400.png"],
+    images: ["https://images.unsplash.com/photo-1547949003-9792a18a2601?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"],
     aiHint: "messenger bag"
   },
   {
@@ -246,7 +246,7 @@ export const products: Product[] = [
     price: 9999.00,
     rating: 4.6,
     category: "Electronics",
-    images: ["https://placehold.co/600x400.png"],
+    images: ["https://images.unsplash.com/photo-1517411262332-9c9849344933?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"],
     aiHint: "action camera"
   },
   {
@@ -256,7 +256,7 @@ export const products: Product[] = [
     price: 899.00,
     rating: 4.7,
     category: "Home Goods",
-    images: ["https://placehold.co/600x400.png"],
+    images: ["https://images.unsplash.com/photo-1612293428567-2b12a84a6c6d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"],
     aiHint: "scented candle"
   },
   {
@@ -266,7 +266,7 @@ export const products: Product[] = [
     price: 499.00,
     rating: 4.5,
     category: "Apparel",
-    images: ["https://placehold.co/600x400.png"],
+    images: ["https://images.unsplash.com/photo-1611082538419-8def33578e7f?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"],
     aiHint: "socks pack"
   },
   {
@@ -276,7 +276,7 @@ export const products: Product[] = [
     price: 1299.00,
     rating: 4.8,
     category: "Home Goods",
-    images: ["https://placehold.co/600x400.png"],
+    images: ["https://images.unsplash.com/photo-1610399122820-a619d77a0664?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"],
     aiHint: "water bottle"
   },
   {
@@ -286,7 +286,7 @@ export const products: Product[] = [
     price: 399.00,
     rating: 4.6,
     category: "Electronics",
-    images: ["https://placehold.co/600x400.png"],
+    images: ["https://images.unsplash.com/photo-1592424002842-5e4c62c26b9a?q=80&w=1964&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"],
     aiHint: "usb cable"
   },
   {
@@ -296,7 +296,7 @@ export const products: Product[] = [
     price: 799.00,
     rating: 4.9,
     category: "Books",
-    images: ["https://placehold.co/600x400.png"],
+    images: ["https://images.unsplash.com/photo-1519791883288-dc81395b3641?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"],
     aiHint: "self-help book"
   },
   {
@@ -306,7 +306,7 @@ export const products: Product[] = [
     price: 649.00,
     rating: 4.4,
     category: "Apparel",
-    images: ["https://placehold.co/600x400.png"],
+    images: ["https://images.unsplash.com/photo-1579401729352-616d0asan1d8?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"],
     aiHint: "tote bag"
   },
   {
@@ -316,7 +316,7 @@ export const products: Product[] = [
     price: 1199.00,
     rating: 4.7,
     category: "Home Goods",
-    images: ["https://placehold.co/600x400.png"],
+    images: ["https://images.unsplash.com/photo-1605384904383-04b6de75d272?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"],
     aiHint: "mug set"
   },
   {
@@ -326,8 +326,11 @@ export const products: Product[] = [
     price: 2499.00,
     rating: 4.6,
     category: "Electronics",
-    images: ["https://placehold.co/600x400.png"],
+    images: ["https://images.unsplash.com/photo-1589100782635-992329380f99?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"],
     aiHint: "bluetooth speaker"
   }
 ];
 
+
+
+    

@@ -1,7 +1,7 @@
 
 "use client";
 
-import { createContext, useContext, ReactNode, useState, useEffect } from "react";
+import { createContext, useContext, ReactNode, useState, useEffect, useRef } from "react";
 import type { Product } from "@/lib/data";
 import { useLocalStorage } from "@/hooks/use-local-storage";
 import { useToast } from "@/hooks/use-toast";
@@ -41,42 +41,46 @@ export function AppProvider({ children }: { children: ReactNode }) {
     "viewedProducts",
     []
   );
-  const [isCartSynced, setIsCartSynced] = useState(false);
   const { toast } = useToast();
+  const isSyncing = useRef(false);
 
+  // Set up Firebase auth listener once on mount
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-      setUserLoading(true);
       setUser(currentUser);
       if (currentUser) {
         const details = await getUserDetails(currentUser.uid);
         setUserDetails(details);
-        setIsCartSynced(false); 
       } else {
         setUserDetails(null);
-        setCart([]); 
-        setIsCartSynced(true); 
       }
       setUserLoading(false);
     });
+    // Cleanup subscription on unmount
     return () => unsubscribe();
-  }, [setCart]);
+  }, []);
 
+  // Sync cart when user logs in
   useEffect(() => {
-    if (user && !isCartSynced) {
-      const syncCart = async () => {
+    const syncCart = async () => {
+      if (user && !isSyncing.current) {
+        isSyncing.current = true;
+        setUserLoading(true);
+
         try {
-          // Use the value directly from localStorage to avoid stale state issues
           const localCart = JSON.parse(window.localStorage.getItem('cart') || '[]');
           const firestoreCart = await getCart(user.uid);
 
           const mergedCartMap = new Map<string, CartItem>();
 
+          // Add firestore items first
           firestoreCart.forEach(item => mergedCartMap.set(item.id, item));
           
-          localCart.forEach(localItem => {
+          // Merge local items
+          localCart.forEach((localItem: CartItem) => {
             const firestoreItem = mergedCartMap.get(localItem.id);
             if (firestoreItem) {
+                // If item exists in both, take the larger quantity
                 mergedCartMap.set(localItem.id, {
                     ...localItem,
                     quantity: Math.max(localItem.quantity, firestoreItem.quantity)
@@ -88,23 +92,31 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
           const finalCart = Array.from(mergedCartMap.values());
           
+          // Update state and persistence layers
           setCart(finalCart);
           await updateCart(user.uid, finalCart);
+
         } catch (error) {
           console.error("Failed to sync cart with Firestore:", error);
         } finally {
-            setIsCartSynced(true);
+          setUserLoading(false);
+          isSyncing.current = false;
         }
-      };
-      syncCart();
-    }
-  }, [user, isCartSynced, setCart]);
+      } else if (!user) {
+        // Clear cart on logout
+        setCart([]);
+      }
+    };
+
+    syncCart();
+  }, [user, setCart]);
 
 
   const handleCartUpdate = (newCart: CartItem[]) => {
     setCart(newCart);
     if(user) {
-        updateCart(user.uid, newCart);
+      // Debounce or batch updates in a real app if this becomes too chatty
+      updateCart(user.uid, newCart);
     }
   };
 

@@ -108,7 +108,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
       }
     };
 
-    syncCart();
+    if (user !== undefined) {
+        syncCart();
+    }
   }, [user, setCart]);
 
 

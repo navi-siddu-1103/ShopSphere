@@ -1,6 +1,7 @@
+
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import { products, categories } from "@/lib/data";
 import type { Product } from "@/lib/data";
 import ProductCard from "@/components/product-card";
@@ -12,12 +13,85 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Search } from "lucide-react";
+import { Search, Mic, MicOff } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 
 export default function Home() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [sortOrder, setSortOrder] = useState("rating-desc");
+  const [isListening, setIsListening] = useState(false);
+  const { toast } = useToast();
+
+  const recognitionRef = useRef<any>(null);
+
+  useEffect(() => {
+    // Check for browser support for SpeechRecognition API
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (SpeechRecognition) {
+      recognitionRef.current = new SpeechRecognition();
+      const recognition = recognitionRef.current;
+      recognition.continuous = false;
+      recognition.interimResults = false;
+      recognition.lang = 'en-US';
+
+      recognition.onresult = (event: any) => {
+        const transcript = event.results[0][0].transcript;
+        setSearchTerm(transcript);
+        setIsListening(false);
+        toast({
+          title: "Search updated",
+          description: `Searching for: "${transcript}"`,
+        });
+      };
+
+      recognition.onerror = (event: any) => {
+        console.error("Speech recognition error", event.error);
+        setIsListening(false);
+        toast({
+          title: "Voice search error",
+          description: "Sorry, I couldn't understand that. Please try again.",
+          variant: "destructive",
+        });
+      };
+
+      recognition.onend = () => {
+        setIsListening(false);
+      };
+    }
+  }, [toast]);
+
+  const handleToggleListening = () => {
+    const recognition = recognitionRef.current;
+    if (!recognition) {
+       toast({
+          title: "Feature not supported",
+          description: "Your browser does not support voice search.",
+          variant: "destructive",
+        });
+      return;
+    }
+
+    if (isListening) {
+      recognition.stop();
+      setIsListening(false);
+    } else {
+      recognition.start();
+      setIsListening(true);
+      toast({
+        title: "Listening...",
+        description: "Please speak into your microphone.",
+      });
+    }
+  };
+
 
   const filteredAndSortedProducts = useMemo(() => {
     let filtered = products;
@@ -63,10 +137,31 @@ export default function Home() {
           <Input
             type="search"
             placeholder="Search for products..."
-            className="pl-10"
+            className="pl-10 pr-12"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                    variant="ghost"
+                    size="icon"
+                    className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8"
+                    onClick={handleToggleListening}
+                  >
+                    {isListening ? (
+                       <Mic className="h-5 w-5 text-primary" />
+                    ) : (
+                       <MicOff className="h-5 w-5 text-muted-foreground" />
+                    )}
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Search with your voice</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </div>
         <div className="flex gap-4">
           <Select value={selectedCategory} onValueChange={setSelectedCategory}>

@@ -6,10 +6,26 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAppContext } from "@/context/app-context";
 import { products } from "@/lib/data";
 import { Separator } from "@/components/ui/separator";
+import { createOrder } from "@/actions/orders";
+import { useToast } from "@/hooks/use-toast";
+import { useEffect } from "react";
 
 export default function CheckoutPage() {
-  const { cart, clearCart } = useAppContext();
+  const { cart, clearCart, user, userLoading } = useAppContext();
   const router = useRouter();
+  const { toast } = useToast();
+
+  useEffect(() => {
+    // Redirect to login if user is not logged in and loading is finished
+    if (!userLoading && !user) {
+      toast({
+        title: "Authentication Required",
+        description: "Please log in to proceed to checkout.",
+        variant: "destructive"
+      });
+      router.push("/login");
+    }
+  }, [user, userLoading, router, toast]);
 
   const cartItems = cart
     .map((item) => {
@@ -23,10 +39,42 @@ export default function CheckoutPage() {
     0
   );
 
-  const handleConfirm = () => {
-    clearCart();
-    router.push("/checkout/success");
+  const handleConfirm = async () => {
+    if (!user) {
+       toast({
+        title: "Authentication Required",
+        description: "You must be logged in to place an order.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    const result = await createOrder({
+      userId: user.uid,
+      items: cart,
+      total: subtotal,
+    });
+
+    if ("orderId" in result) {
+      clearCart();
+      router.push("/checkout/success");
+    } else {
+       toast({
+        title: "Order Failed",
+        description: result.error,
+        variant: "destructive"
+      });
+    }
   };
+
+  if (userLoading || !user) {
+    // Show a loading state or similar while checking auth
+    return (
+      <div className="container mx-auto px-4 py-12 max-w-2xl text-center">
+        <p>Loading...</p>
+      </div>
+    );
+  }
 
   if (cartItems.length === 0) {
     router.replace("/");

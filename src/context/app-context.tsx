@@ -1,9 +1,12 @@
 "use client";
 
-import { createContext, useContext, ReactNode } from "react";
+import { createContext, useContext, ReactNode, useState, useEffect } from "react";
 import type { Product } from "@/lib/data";
 import { useLocalStorage } from "@/hooks/use-local-storage";
 import { useToast } from "@/hooks/use-toast";
+import { auth } from "@/lib/firebase";
+import type { User } from "firebase/auth";
+import { onAuthStateChanged } from "firebase/auth";
 
 export type CartItem = {
   id: string;
@@ -11,6 +14,8 @@ export type CartItem = {
 };
 
 type AppContextType = {
+  user: User | null;
+  userLoading: boolean;
   cart: CartItem[];
   addToCart: (productId: string, quantity?: number) => void;
   removeFromCart: (productId:string) => void;
@@ -23,12 +28,22 @@ type AppContextType = {
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export function AppProvider({ children }: { children: ReactNode }) {
+  const [user, setUser] = useState<User | null>(null);
+  const [userLoading, setUserLoading] = useState(true);
   const [cart, setCart] = useLocalStorage<CartItem[]>("cart", []);
   const [viewedProducts, setViewedProducts] = useLocalStorage<string[]>(
     "viewedProducts",
     []
   );
   const { toast } = useToast();
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+      setUserLoading(false);
+    });
+    return () => unsubscribe();
+  }, []);
 
   const addToCart = (productId: string, quantity = 1) => {
     setCart((prevCart) => {
@@ -77,6 +92,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
   };
 
   const value = {
+    user,
+    userLoading,
     cart,
     addToCart,
     removeFromCart,

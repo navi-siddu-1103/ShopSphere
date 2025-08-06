@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 
 export default function Header() {
-  const { getCartCount, user, userLoading, cart } = useAppContext();
+  const { user, userLoading, cart } = useAppContext();
   const [cartCount, setCartCount] = useState(0);
   const [isClient, setIsClient] = useState(false);
   const router = useRouter();
@@ -29,9 +29,10 @@ export default function Header() {
 
   useEffect(() => {
     if (isClient) {
-      setCartCount(getCartCount());
+      const count = cart.reduce((acc, item) => acc + item.quantity, 0);
+      setCartCount(count);
     }
-  }, [isClient, cart, getCartCount]);
+  }, [cart, isClient]);
   
   const handleSignOut = async () => {
     await signOut(auth);

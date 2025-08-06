@@ -2,7 +2,7 @@
 "use client";
 
 import Link from "next/link";
-import { ShoppingCart, Store, User as UserIcon, LogOut, LogIn, Rows3 } from "lucide-react";
+import { ShoppingCart, Store, User as UserIcon, LogOut, LogIn, Rows3, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAppContext } from "@/context/app-context";
 import { useEffect, useState } from "react";
@@ -16,7 +16,13 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
+import {
+  Sheet,
+  SheetContent,
+  SheetTrigger,
+  SheetClose,
+} from "@/components/ui/sheet";
 
 export default function Header() {
   const { user, userLoading, cart } = useAppContext();
@@ -40,10 +46,65 @@ export default function Header() {
     router.push("/");
   };
 
+  const MobileNav = () => (
+    <Sheet>
+      <SheetTrigger asChild>
+        <Button variant="ghost" size="icon" className="md:hidden">
+          <Menu className="h-6 w-6" />
+          <span className="sr-only">Open Menu</span>
+        </Button>
+      </SheetTrigger>
+      <SheetContent side="left">
+        <div className="flex flex-col h-full py-6">
+           <Link href="/" className="mr-6 flex items-center space-x-2 mb-8">
+              <Store className="h-6 w-6" />
+              <span className="font-bold inline-block">ShopSphere</span>
+            </Link>
+          <div className="flex flex-col space-y-2 flex-grow">
+            {user ? (
+              <>
+                <SheetClose asChild>
+                   <Link href="/profile" className="flex items-center gap-2 p-2 rounded-md hover:bg-muted">
+                      <UserIcon className="mr-2 h-4 w-4" />
+                      <span>Profile</span>
+                    </Link>
+                </SheetClose>
+                <SheetClose asChild>
+                   <Link href="/orders" className="flex items-center gap-2 p-2 rounded-md hover:bg-muted">
+                      <Rows3 className="mr-2 h-4 w-4" />
+                      <span>My Orders</span>
+                    </Link>
+                </SheetClose>
+              </>
+            ) : (
+              <SheetClose asChild>
+                <Link href="/login" className="flex items-center gap-2 p-2 rounded-md hover:bg-muted">
+                    <LogIn className="mr-2 h-4 w-4" />
+                    Sign In
+                </Link>
+              </SheetClose>
+            )}
+          </div>
+          {user && (
+            <div className="mt-auto">
+               <Button onClick={handleSignOut} variant="outline" className="w-full">
+                <LogOut className="mr-2 h-4 w-4" />
+                <span>Log out</span>
+              </Button>
+            </div>
+          )}
+        </div>
+      </SheetContent>
+    </Sheet>
+  );
+
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center">
-        <Link href="/" className="mr-6 flex items-center space-x-2">
+        <div className="md:hidden">
+          <MobileNav />
+        </div>
+        <Link href="/" className="mr-6 hidden md:flex items-center space-x-2">
           <Store className="h-6 w-6" />
           <span className="font-bold inline-block">ShopSphere</span>
         </Link>
@@ -59,7 +120,7 @@ export default function Header() {
                 <span className="sr-only">Shopping Cart</span>
               </Button>
             </Link>
-          <nav className="flex items-center">
+          <nav className="hidden md:flex items-center">
             {userLoading ? (
               <div className="w-8 h-8 bg-muted rounded-full animate-pulse" />
             ) : user ? (

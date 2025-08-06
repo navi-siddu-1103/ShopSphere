@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useAppContext } from "@/context/app-context";
-import { getPersonalizedRecommendations as fetchRecommendations } from "@/actions/recommendations";
+import { getPersonalizedRecommendationsAction as fetchRecommendations } from "@/actions/recommendations";
 import { products, type Product } from "@/lib/data";
 import ProductCard from "./product-card";
 import { Skeleton } from "./ui/skeleton";

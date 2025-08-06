@@ -1,7 +1,7 @@
 
 "use client";
 
-import { createContext, useContext, ReactNode, useState, useEffect, useCallback } from "react";
+import { createContext, useContext, ReactNode, useState, useEffect } from "react";
 import type { Product } from "@/lib/data";
 import { useLocalStorage } from "@/hooks/use-local-storage";
 import { useToast } from "@/hooks/use-toast";
@@ -51,33 +51,29 @@ export function AppProvider({ children }: { children: ReactNode }) {
       if (currentUser) {
         const details = await getUserDetails(currentUser.uid);
         setUserDetails(details);
-        // Reset sync status on user change
         setIsCartSynced(false); 
       } else {
-        // User logged out
         setUserDetails(null);
-        setCart([]); // Clear cart on logout
-        setIsCartSynced(true); // No cart to sync
+        setCart([]); 
+        setIsCartSynced(true); 
       }
       setUserLoading(false);
     });
     return () => unsubscribe();
   }, [setCart]);
 
-  // Effect for syncing cart after user login
   useEffect(() => {
     if (user && !isCartSynced) {
       const syncCart = async () => {
         try {
+          // Use the value directly from localStorage to avoid stale state issues
           const localCart = JSON.parse(window.localStorage.getItem('cart') || '[]');
           const firestoreCart = await getCart(user.uid);
 
           const mergedCartMap = new Map<string, CartItem>();
 
-          // Process firestore cart first
           firestoreCart.forEach(item => mergedCartMap.set(item.id, item));
           
-          // Merge local cart, using higher quantity if conflict
           localCart.forEach(localItem => {
             const firestoreItem = mergedCartMap.get(localItem.id);
             if (firestoreItem) {
@@ -92,12 +88,12 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
           const finalCart = Array.from(mergedCartMap.values());
           
-          setCart(finalCart); // Update local state and localStorage
-          await updateCart(user.uid, finalCart); // Sync merged cart back to Firestore
+          setCart(finalCart);
+          await updateCart(user.uid, finalCart);
         } catch (error) {
           console.error("Failed to sync cart with Firestore:", error);
         } finally {
-            setIsCartSynced(true); // Mark as synced
+            setIsCartSynced(true);
         }
       };
       syncCart();
@@ -105,12 +101,12 @@ export function AppProvider({ children }: { children: ReactNode }) {
   }, [user, isCartSynced, setCart]);
 
 
-  const handleCartUpdate = useCallback((newCart: CartItem[]) => {
+  const handleCartUpdate = (newCart: CartItem[]) => {
     setCart(newCart);
     if(user) {
         updateCart(user.uid, newCart);
     }
-  }, [user, setCart]);
+  };
 
 
   const addToCart = (productId: string, quantity = 1) => {
@@ -158,8 +154,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const addToViewed = (productId: string) => {
     setViewedProducts((prev) => {
       const newViewed = prev.filter(id => id !== productId);
-      newViewed.unshift(productId); // Add to the beginning
-      return newViewed.slice(0, 5); // Keep last 5 viewed products
+      newViewed.unshift(productId);
+      return newViewed.slice(0, 5);
     });
   };
 

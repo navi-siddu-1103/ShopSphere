@@ -4,9 +4,10 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 
 // A Custom Hook that synchronizes state with localStorage.
-export function useLocalStorage<T>(key: string, initialValue: T): [T, (value: T | ((val: T) => T)) => void] {
+export function useLocalStorage<T>(key: string, initialValue: T): [T, React.Dispatch<React.SetStateAction<T>>] {
   
   const [storedValue, setStoredValue] = useState<T>(() => {
+    // This part runs only on the client, and only on the initial render.
     if (typeof window === "undefined") {
       return initialValue;
     }
@@ -19,26 +20,17 @@ export function useLocalStorage<T>(key: string, initialValue: T): [T, (value: T 
     }
   });
 
-  // This ref will hold the latest storedValue, but updating it won't cause a re-render.
-  const valueRef = useRef(storedValue);
+  // This effect runs whenever `storedValue` changes.
   useEffect(() => {
-    valueRef.current = storedValue;
-  }, [storedValue]);
-
-  // The setValue function is now wrapped in useCallback with an empty dependency array.
-  // This ensures it has a stable identity across re-renders.
-  const setValue = useCallback((value: T | ((val: T) => T)) => {
     try {
-      // It uses the ref to get the current value, avoiding a dependency on `storedValue`.
-      const valueToStore = value instanceof Function ? value(valueRef.current) : value;
-      setStoredValue(valueToStore);
       if (typeof window !== "undefined") {
-        window.localStorage.setItem(key, JSON.stringify(valueToStore));
+        window.localStorage.setItem(key, JSON.stringify(storedValue));
       }
     } catch (error) {
       console.error(error);
     }
-  }, [key]);
+  }, [key, storedValue]);
 
-  return [storedValue, setValue];
+
+  return [storedValue, setStoredValue];
 }

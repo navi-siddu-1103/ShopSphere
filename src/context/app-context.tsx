@@ -1,7 +1,7 @@
 
 "use client";
 
-import { createContext, useContext, ReactNode, useState, useEffect, useRef } from "react";
+import { createContext, useContext, ReactNode, useState, useEffect, useRef, useCallback } from "react";
 import type { Product } from "@/lib/data";
 import { useLocalStorage } from "@/hooks/use-local-storage";
 import { useToast } from "@/hooks/use-toast";
@@ -43,6 +43,11 @@ export function AppProvider({ children }: { children: ReactNode }) {
   );
   const { toast } = useToast();
   const isSyncing = useRef(false);
+  const userRef = useRef(user); // Use ref to track user without causing re-renders in effects
+
+  useEffect(() => {
+    userRef.current = user;
+  }, [user]);
 
   // Set up Firebase auth listener once on mount
   useEffect(() => {
@@ -53,12 +58,13 @@ export function AppProvider({ children }: { children: ReactNode }) {
         setUserDetails(details);
       } else {
         setUserDetails(null);
+        setCart([]); // Clear cart on logout
       }
       setUserLoading(false);
     });
     // Cleanup subscription on unmount
     return () => unsubscribe();
-  }, []);
+  }, [setCart]);
 
   // Sync cart when user logs in
   useEffect(() => {
@@ -102,76 +108,76 @@ export function AppProvider({ children }: { children: ReactNode }) {
           setUserLoading(false);
           isSyncing.current = false;
         }
-      } else if (!user) {
-        // Clear cart on logout
-        setCart([]);
       }
     };
 
-    if (user !== undefined) {
-        syncCart();
+    if (user && !userLoading) {
+      syncCart();
     }
-  }, [user, setCart]);
+  }, [user, userLoading, setCart]);
 
 
-  const handleCartUpdate = (newCart: CartItem[]) => {
+  const handleCartUpdate = useCallback((newCart: CartItem[]) => {
     setCart(newCart);
-    if(user) {
-      // Debounce or batch updates in a real app if this becomes too chatty
-      updateCart(user.uid, newCart);
+    if(userRef.current) {
+      updateCart(userRef.current.uid, newCart);
     }
-  };
+  },[setCart]);
 
 
-  const addToCart = (productId: string, quantity = 1) => {
-    let newCart: CartItem[] = [];
-    const existingItem = cart.find((item) => item.id === productId);
-    if (existingItem) {
-        newCart = cart.map((item) =>
-        item.id === productId
-          ? { ...item, quantity: item.quantity + quantity }
-          : item
-      );
-    } else {
-        newCart = [...cart, { id: productId, quantity }];
-    }
-    handleCartUpdate(newCart);
-
-    toast({
-        title: "Added to cart!",
-        description: "The product has been added to your shopping cart.",
+  const addToCart = useCallback((productId: string, quantity = 1) => {
+    setCart(prevCart => {
+      let newCart: CartItem[];
+      const existingItem = prevCart.find((item) => item.id === productId);
+      if (existingItem) {
+          newCart = prevCart.map((item) =>
+          item.id === productId
+            ? { ...item, quantity: item.quantity + quantity }
+            : item
+        );
+      } else {
+          newCart = [...prevCart, { id: productId, quantity }];
+      }
+      if(userRef.current) {
+        updateCart(userRef.current.uid, newCart);
+      }
+      toast({
+          title: "Added to cart!",
+          description: "The product has been added to your shopping cart.",
+      });
+      return newCart;
     });
-  };
+  }, [setCart, toast]);
 
-  const removeFromCart = (productId: string) => {
+  const removeFromCart = useCallback((productId: string) => {
     const newCart = cart.filter(item => item.id !== productId);
     handleCartUpdate(newCart);
     toast({
       title: "Item removed",
       description: "The product has been removed from your cart.",
     });
-  };
+  }, [cart, handleCartUpdate, toast]);
 
-  const updateItemQuantity = (productId: string, quantity: number) => {
+  const updateItemQuantity = useCallback((productId: string, quantity: number) => {
     if (quantity <= 0) {
       removeFromCart(productId);
       return;
     }
     const newCart = cart.map(item => item.id === productId ? { ...item, quantity } : item);
     handleCartUpdate(newCart);
-  };
+  }, [cart, handleCartUpdate, removeFromCart]);
 
-  const clearCart = () => {
+  const clearCart = useCallback(() => {
     handleCartUpdate([]);
-  };
+  }, [handleCartUpdate]);
 
-  const addToViewed = (productId: string) => {
+  const addToViewed = useCallback((productId: string) => {
     setViewedProducts((prev) => {
       const newViewed = prev.filter(id => id !== productId);
       newViewed.unshift(productId);
       return newViewed.slice(0, 5);
     });
-  };
+  }, [setViewedProducts]);
 
   const value = {
     user,

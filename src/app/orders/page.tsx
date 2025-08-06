@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useState } from "react";
@@ -24,6 +25,7 @@ type OrderItem = {
   id: string;
   quantity: number;
   price: number;
+  name: string;
 };
 
 type Order = {
@@ -128,7 +130,7 @@ export default function OrdersPage() {
                           <Image src={product.images[0]} alt={product.name} fill className="object-cover" data-ai-hint={product.aiHint}/>
                         </div>
                       <div className="flex-1">
-                        <p className="font-medium">{product.name}</p>
+                        <p className="font-medium">{item.name}</p>
                         <p className="text-sm text-muted-foreground">
                           Qty: {item.quantity}
                         </p>

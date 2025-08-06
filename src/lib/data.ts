@@ -248,5 +248,86 @@ export const products: Product[] = [
     category: "Electronics",
     images: ["https://placehold.co/600x400.png"],
     aiHint: "action camera"
+  },
+  {
+    id: "21",
+    name: "Scented Soy Candle",
+    description: "A hand-poured soy wax candle with a calming lavender scent. Provides up to 40 hours of burn time.",
+    price: 899.00,
+    rating: 4.7,
+    category: "Home Goods",
+    images: ["https://placehold.co/600x400.png"],
+    aiHint: "scented candle"
+  },
+  {
+    id: "22",
+    name: "Classic Crew Socks (3-Pack)",
+    description: "A pack of three comfortable and durable crew socks, made from a breathable cotton blend.",
+    price: 499.00,
+    rating: 4.5,
+    category: "Apparel",
+    images: ["https://placehold.co/600x400.png"],
+    aiHint: "socks pack"
+  },
+  {
+    id: "23",
+    name: "Stainless Steel Water Bottle",
+    description: "A 750ml double-walled insulated water bottle. Keeps drinks cold for 24 hours or hot for 12 hours.",
+    price: 1299.00,
+    rating: 4.8,
+    category: "Home Goods",
+    images: ["https://placehold.co/600x400.png"],
+    aiHint: "water bottle"
+  },
+  {
+    id: "24",
+    name: "USB-C to USB-A Cable",
+    description: "A durable, braided 1-meter cable for charging and data sync. Compatible with all modern devices.",
+    price: 399.00,
+    rating: 4.6,
+    category: "Electronics",
+    images: ["https://placehold.co/600x400.png"],
+    aiHint: "usb cable"
+  },
+  {
+    id: "25",
+    name: "The Art of Tidying Up",
+    description: "A bestselling guide to decluttering your home and life, leading to a more organized and peaceful mindset.",
+    price: 799.00,
+    rating: 4.9,
+    category: "Books",
+    images: ["https://placehold.co/600x400.png"],
+    aiHint: "self-help book"
+  },
+  {
+    id: "26",
+    name: "Canvas Tote Bag",
+    description: "A stylish and sturdy canvas tote bag, perfect for shopping, errands, or a day at the beach.",
+    price: 649.00,
+    rating: 4.4,
+    category: "Apparel",
+    images: ["https://placehold.co/600x400.png"],
+    aiHint: "tote bag"
+  },
+  {
+    id: "27",
+    name: "Ceramic Mug Set (Set of 2)",
+    description: "Two beautifully crafted ceramic mugs with a modern design. Microwave and dishwasher safe.",
+    price: 1199.00,
+    rating: 4.7,
+    category: "Home Goods",
+    images: ["https://placehold.co/600x400.png"],
+    aiHint: "mug set"
+  },
+  {
+    id: "28",
+    name: "Portable Bluetooth Speaker",
+    description: "A compact yet powerful Bluetooth speaker with rich sound and deep bass. 10-hour battery life and water-resistant design.",
+    price: 2499.00,
+    rating: 4.6,
+    category: "Electronics",
+    images: ["https://placehold.co/600x400.png"],
+    aiHint: "bluetooth speaker"
   }
 ];
+

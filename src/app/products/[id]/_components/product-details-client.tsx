@@ -52,7 +52,7 @@ export default function ProductDetailsClient({ product }: ProductDetailsClientPr
             </span>
           </div>
           <Separator className="my-4" />
-          <p className="text-3xl font-bold text-foreground">${product.price.toFixed(2)}</p>
+          <p className="text-3xl font-bold text-foreground">₹{product.price.toFixed(2)}</p>
           <p className="mt-4 text-muted-foreground leading-relaxed">
             {product.description}
           </p>

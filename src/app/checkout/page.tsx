@@ -94,7 +94,7 @@ export default function CheckoutPage() {
               item && (
                 <div key={item.id} className="flex justify-between text-sm">
                   <span className="text-muted-foreground">{item.name} x{item.quantity}</span>
-                  <span>${(item.price * item.quantity).toFixed(2)}</span>
+                  <span>₹{(item.price * item.quantity).toFixed(2)}</span>
                 </div>
               )
             ))}
@@ -103,21 +103,21 @@ export default function CheckoutPage() {
           <div className="space-y-2 my-4">
             <div className="flex justify-between font-medium">
               <span>Subtotal</span>
-              <span>${subtotal.toFixed(2)}</span>
+              <span>₹{subtotal.toFixed(2)}</span>
             </div>
             <div className="flex justify-between font-medium">
               <span>Shipping & Handling</span>
-              <span>$0.00</span>
+              <span>₹0.00</span>
             </div>
             <div className="flex justify-between font-medium">
               <span>Taxes</span>
-              <span>$0.00</span>
+              <span>₹0.00</span>
             </div>
           </div>
           <Separator />
           <div className="flex justify-between font-bold text-xl my-4">
             <span>Order Total</span>
-            <span>${subtotal.toFixed(2)}</span>
+            <span>₹{subtotal.toFixed(2)}</span>
           </div>
           <p className="text-xs text-muted-foreground text-center mb-6">
             This is a demo application. No real payment will be processed.

@@ -134,7 +134,7 @@ export default function OrdersPage() {
                         </p>
                       </div>
                       <p className="font-medium">
-                        ${(item.price * item.quantity).toFixed(2)}
+                        ₹{(item.price * item.quantity).toFixed(2)}
                       </p>
                     </div>
                   );
@@ -143,7 +143,7 @@ export default function OrdersPage() {
             </CardContent>
             <Separator />
             <CardFooter className="flex justify-end font-bold text-lg pt-6">
-                <span>Total: ${order.total.toFixed(2)}</span>
+                <span>Total: ₹{order.total.toFixed(2)}</span>
             </CardFooter>
           </Card>
         ))}

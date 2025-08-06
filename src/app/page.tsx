@@ -13,7 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Search, Mic, MicOff } from "lucide-react";
+import { Search, Mic, MicOff, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import {
@@ -23,7 +23,8 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip"
 import RecentlyViewed from "@/components/recently-viewed";
-import { Separator } from "@/components/ui/separator";
+import Link from "next/link";
+
 
 export default function Home() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -126,18 +127,30 @@ export default function Home() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="text-center mb-12">
-        <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-6xl">
-          Welcome to ShopSphere
-        </h1>
-        <p className="mt-4 text-lg leading-8 text-muted-foreground">
-          Discover a world of products at your fingertips.
-        </p>
-      </div>
+      <section className="text-center py-16 md:py-24 rounded-lg bg-card border shadow-sm">
+        <div
+            className="absolute inset-0 h-full w-full bg-background bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:36px_36px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_60%,transparent_100%)]"></div>
+        <div className="relative">
+             <h1 className="text-4xl font-extrabold tracking-tight text-foreground sm:text-5xl md:text-6xl">
+                Find Your Next Favorite Thing
+            </h1>
+            <p className="mt-6 max-w-2xl mx-auto text-lg leading-8 text-muted-foreground">
+                Explore a curated selection of high-quality products, from the latest tech to timeless apparel.
+            </p>
+             <div className="mt-10 flex items-center justify-center gap-x-6">
+                <Button asChild size="lg">
+                    <Link href="#products-section">
+                        Start Shopping
+                        <ArrowRight className="ml-2 h-5 w-5" />
+                    </Link>
+                </Button>
+            </div>
+        </div>
+    </section>
 
       <RecentlyViewed />
 
-      <div className="mb-8 mt-12 flex flex-col gap-4 md:flex-row md:items-center">
+      <div id="products-section" className="mb-8 mt-16 flex flex-col gap-4 md:flex-row md:items-center">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
           <Input

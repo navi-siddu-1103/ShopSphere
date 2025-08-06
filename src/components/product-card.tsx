@@ -25,8 +25,8 @@ export default function ProductCard({ product, className }: ProductCardProps) {
   const { addToCart } = useAppContext();
 
   return (
-    <Card className={cn("flex flex-col h-full overflow-hidden transition-shadow duration-300 hover:shadow-xl", className)}>
-      <CardHeader className="p-0">
+    <Card className={cn("flex flex-col h-full overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1", className)}>
+      <CardHeader className="p-0 border-b">
         <Link href={`/products/${product.id}`} className="block">
           <div className="aspect-video relative">
             <Image
@@ -39,14 +39,14 @@ export default function ProductCard({ product, className }: ProductCardProps) {
           </div>
         </Link>
       </CardHeader>
-      <CardContent className="p-4 flex-grow">
-        <Link href={`/products/${product.id}`} className="block">
+      <CardContent className="p-4 flex-grow flex flex-col">
+        <Link href={`/products/${product.id}`} className="block flex-grow">
           <CardTitle className="text-lg font-semibold leading-snug hover:text-primary transition-colors">
             {product.name}
           </CardTitle>
         </Link>
-        <div className="mt-2 flex items-center justify-between">
-          <p className="text-xl font-bold text-foreground">₹{product.price.toFixed(2)}</p>
+         <div className="mt-2 flex items-center justify-between">
+          <p className="text-2xl font-bold text-foreground">₹{product.price.toFixed(2)}</p>
           <div className="flex items-center gap-1">
             <Star className="w-5 h-5 text-yellow-400 fill-yellow-400" />
             <span className="font-medium text-muted-foreground">{product.rating}</span>

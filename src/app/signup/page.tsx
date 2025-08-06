@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import { Button } from "@/components/ui/button";
 import {
@@ -21,6 +21,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
 import { createUserDetails } from "@/actions/users";
 import { Textarea } from "@/components/ui/textarea";
+import { Separator } from "@/components/ui/separator";
 
 export default function SignupPage() {
   const [firstName, setFirstName] = useState("");
@@ -60,9 +61,38 @@ export default function SignupPage() {
       router.push("/");
     } catch (err: any) {
        setError(err.message);
-       setIsLoading(false);
+    } finally {
+      setIsLoading(false);
     }
   };
+
+  const handleGoogleSignIn = async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const provider = new GoogleAuthProvider();
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+
+      // Create user details in Firestore if they don't exist
+      await createUserDetails({
+        uid: user.uid,
+        email: user.email!,
+        firstName: user.displayName || "User",
+      });
+
+      toast({
+        title: "Signed in with Google!",
+        description: "Welcome to ShopSphere.",
+      });
+      router.push("/");
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
 
   return (
     <div className="container mx-auto flex items-center justify-center px-4 py-12">
@@ -140,11 +170,18 @@ export default function SignupPage() {
                 disabled={isLoading}
               />
             </div>
+            <Button type="submit" className="w-full" disabled={isLoading}>
+              {isLoading ? "Creating Account..." : "Create Account with Email"}
+            </Button>
+            <div className="relative">
+              <Separator />
+              <span className="absolute left-1/2 -translate-x-1/2 top-[-10px] bg-card px-2 text-xs text-muted-foreground">OR</span>
+            </div>
+            <Button variant="outline" type="button" onClick={handleGoogleSignIn} disabled={isLoading}>
+              {isLoading ? "Please wait..." : "Sign Up with Google"}
+            </Button>
           </CardContent>
           <CardFooter className="flex flex-col">
-            <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? "Creating Account..." : "Create Account"}
-            </Button>
             <div className="mt-4 text-center text-sm">
               Already have an account?{" "}
               <Link href="/login" className="underline">

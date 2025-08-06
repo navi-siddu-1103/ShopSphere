@@ -127,7 +127,7 @@ export default function Home() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <section className="text-center py-16 md:py-24 rounded-lg bg-card border shadow-sm">
+      <section className="relative overflow-hidden text-center py-16 md:py-24 rounded-lg bg-card border shadow-sm">
         <div
             className="absolute inset-0 h-full w-full bg-background bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:36px_36px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_60%,transparent_100%)]"></div>
         <div className="relative">
@@ -172,7 +172,7 @@ export default function Home() {
                     {isListening ? (
                        <Mic className="h-5 w-5 text-primary" />
                     ) : (
-                       <MicOff className="h-5 w-5" />
+                       <Mic className="h-5 w-5" />
                     )}
                 </Button>
               </TooltipTrigger>

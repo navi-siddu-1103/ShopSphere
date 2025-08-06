@@ -11,6 +11,27 @@ export type UserDetails = {
   address?: string;
 };
 
+export async function getUserDetails(
+  uid: string
+): Promise<UserDetails | null> {
+  try {
+    const userDoc = await getDoc(doc(db, 'users', uid));
+    if (userDoc.exists()) {
+      return {
+        uid,
+        email: userDoc.data().email,
+        firstName: userDoc.data().firstName,
+        phone: userDoc.data().phone,
+        address: userDoc.data().address,
+      };
+    }
+    return null;
+  } catch (error) {
+    console.error('Error fetching user details:', error);
+    return null;
+  }
+}
+
 export async function createUserDetails(
   details: UserDetails
 ): Promise<{success: boolean; error?: string}> {

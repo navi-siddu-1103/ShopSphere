@@ -71,6 +71,12 @@ export default function Header() {
                 <DropdownMenuContent align="end">
                   <DropdownMenuLabel>My Account</DropdownMenuLabel>
                   <DropdownMenuSeparator />
+                   <DropdownMenuItem asChild>
+                    <Link href="/profile">
+                      <UserIcon className="mr-2 h-4 w-4" />
+                      <span>Profile</span>
+                    </Link>
+                  </DropdownMenuItem>
                   <DropdownMenuItem asChild>
                     <Link href="/orders">
                       <Rows3 className="mr-2 h-4 w-4" />

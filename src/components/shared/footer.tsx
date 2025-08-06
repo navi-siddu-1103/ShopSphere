@@ -1,3 +1,4 @@
+
 "use client";
 
 import Link from "next/link";
@@ -32,9 +33,10 @@ export default function Footer() {
             </ul>
           </div>
            <div>
-            <h3 className="font-semibold text-foreground mb-4">Partnerships</h3>
+            <h3 className="font-semibold text-foreground mb-4">Legal</h3>
             <ul className="space-y-2">
-              <li><Link href="/become-a-seller" className="hover:text-primary">Become a Seller</Link></li>
+              <li><Link href="/privacy-policy" className="hover:text-primary">Privacy Policy</Link></li>
+              <li><Link href="/terms-of-service" className="hover:text-primary">Terms of Service</Link></li>
             </ul>
           </div>
         </div>

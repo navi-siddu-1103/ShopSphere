@@ -22,6 +22,8 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
+import RecentlyViewed from "@/components/recently-viewed";
+import { Separator } from "@/components/ui/separator";
 
 export default function Home() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -133,7 +135,9 @@ export default function Home() {
         </p>
       </div>
 
-      <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-center">
+      <RecentlyViewed />
+
+      <div className="mb-8 mt-12 flex flex-col gap-4 md:flex-row md:items-center">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
           <Input

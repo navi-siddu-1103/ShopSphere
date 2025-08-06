@@ -1,3 +1,4 @@
+
 "use client";
 
 import Image from "next/image";
@@ -13,16 +14,18 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useAppContext } from "@/context/app-context";
+import { cn } from "@/lib/utils";
 
 interface ProductCardProps {
   product: Product;
+  className?: string;
 }
 
-export default function ProductCard({ product }: ProductCardProps) {
+export default function ProductCard({ product, className }: ProductCardProps) {
   const { addToCart } = useAppContext();
 
   return (
-    <Card className="flex flex-col h-full overflow-hidden transition-shadow duration-300 hover:shadow-xl">
+    <Card className={cn("flex flex-col h-full overflow-hidden transition-shadow duration-300 hover:shadow-xl", className)}>
       <CardHeader className="p-0">
         <Link href={`/products/${product.id}`} className="block">
           <div className="aspect-video relative">

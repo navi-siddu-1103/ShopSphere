@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { useAppContext } from "@/context/app-context";
 import { products } from "@/lib/data";
 import ProductCard from "./product-card";
@@ -16,6 +16,11 @@ import {
 
 export default function RecentlyViewed() {
   const { viewedProducts } = useAppContext();
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   const recentlyViewedProducts = useMemo(() => {
     return products
@@ -23,7 +28,7 @@ export default function RecentlyViewed() {
       .sort((a, b) => viewedProducts.indexOf(a.id) - viewedProducts.indexOf(b.id));
   }, [viewedProducts]);
 
-  if (recentlyViewedProducts.length === 0) {
+  if (!isMounted || recentlyViewedProducts.length === 0) {
     return null;
   }
 

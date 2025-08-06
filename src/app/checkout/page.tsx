@@ -1,31 +1,53 @@
+
 "use client";
 
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { useAppContext } from "@/context/app-context";
 import { products } from "@/lib/data";
 import { Separator } from "@/components/ui/separator";
 import { createOrder } from "@/actions/orders";
 import { useToast } from "@/hooks/use-toast";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 
 export default function CheckoutPage() {
-  const { cart, clearCart, user, userLoading } = useAppContext();
+  const { cart, clearCart, user, userDetails, userLoading } = useAppContext();
   const router = useRouter();
   const { toast } = useToast();
 
+  const [shippingDetails, setShippingDetails] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    address: "",
+  });
+  
+  const [isProcessing, setIsProcessing] = useState(false);
+
   useEffect(() => {
-    // Redirect to login if user is not logged in and loading is finished
-    if (!userLoading && !user) {
-      toast({
-        title: "Authentication Required",
-        description: "Please log in to proceed to checkout.",
-        variant: "destructive"
-      });
-      router.push("/login");
+    if (!userLoading) {
+      if (user && userDetails) {
+        setShippingDetails({
+          name: userDetails.firstName || "",
+          email: userDetails.email || "",
+          phone: userDetails.phone || "",
+          address: userDetails.address || "",
+        });
+      } else if (user) {
+        // user object exists but details are not loaded yet or are null
+        setShippingDetails(prev => ({ ...prev, email: user.email || ""}));
+      }
     }
-  }, [user, userLoading, router, toast]);
+  }, [user, userDetails, userLoading]);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { id, value } = e.target;
+    setShippingDetails(prev => ({ ...prev, [id]: value }));
+  };
 
   const cartItems = cart
     .map((item) => {
@@ -40,19 +62,23 @@ export default function CheckoutPage() {
   );
 
   const handleConfirm = async () => {
-    if (!user) {
+    // Basic validation
+    if (!shippingDetails.name || !shippingDetails.email || !shippingDetails.address) {
        toast({
-        title: "Authentication Required",
-        description: "You must be logged in to place an order.",
+        title: "Missing Information",
+        description: "Please fill in all required shipping details.",
         variant: "destructive"
       });
       return;
     }
 
+    setIsProcessing(true);
+
     const result = await createOrder({
-      userId: user.uid,
+      userId: user?.uid || "guest", // Use "guest" for non-logged-in users
       items: cart,
       total: subtotal,
+      shippingDetails, // Pass shipping details to the order
     });
 
     if ("orderId" in result) {
@@ -65,10 +91,10 @@ export default function CheckoutPage() {
         variant: "destructive"
       });
     }
+     setIsProcessing(false);
   };
 
-  if (userLoading || !user) {
-    // Show a loading state or similar while checking auth
+  if (userLoading) {
     return (
       <div className="container mx-auto px-4 py-12 max-w-2xl text-center">
         <p>Loading...</p>
@@ -82,51 +108,86 @@ export default function CheckoutPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-12 max-w-2xl">
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-2xl md:text-3xl">Checkout</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <h3 className="font-semibold mb-4">Order Summary</h3>
-          <div className="space-y-2 mb-4">
-            {cartItems.map(item => (
-              item && (
-                <div key={item.id} className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">{item.name} x{item.quantity}</span>
-                  <span>₹{(item.price * item.quantity).toFixed(2)}</span>
-                </div>
-              )
-            ))}
-          </div>
-          <Separator />
-          <div className="space-y-2 my-4">
-            <div className="flex justify-between font-medium">
-              <span>Subtotal</span>
+    <div className="container mx-auto px-4 py-12">
+      <h1 className="text-3xl md:text-4xl font-bold tracking-tight mb-8 text-center">Checkout</h1>
+      <div className="grid md:grid-cols-2 gap-12">
+        
+        {/* Shipping Details */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Shipping Information</CardTitle>
+            <CardDescription>
+                {user ? "Please confirm your details for shipping." : "Enter your details for guest checkout."}
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+             <div className="grid gap-2">
+                <Label htmlFor="name">Full Name</Label>
+                <Input id="name" value={shippingDetails.name} onChange={handleInputChange} required />
+            </div>
+             <div className="grid gap-2">
+                <Label htmlFor="email">Email Address</Label>
+                <Input id="email" type="email" value={shippingDetails.email} onChange={handleInputChange} required />
+            </div>
+            <div className="grid gap-2">
+                <Label htmlFor="phone">Phone Number (Optional)</Label>
+                <Input id="phone" type="tel" value={shippingDetails.phone} onChange={handleInputChange} />
+            </div>
+            <div className="grid gap-2">
+                <Label htmlFor="address">Shipping Address</Label>
+                <Textarea id="address" value={shippingDetails.address} onChange={handleInputChange} required />
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Order Summary */}
+        <Card className="flex flex-col">
+          <CardHeader>
+            <CardTitle>Order Summary</CardTitle>
+          </CardHeader>
+          <CardContent className="flex-grow space-y-4">
+            <div className="space-y-2 mb-4 max-h-60 overflow-y-auto pr-2">
+              {cartItems.map(item => (
+                item && (
+                  <div key={item.id} className="flex justify-between items-center text-sm">
+                    <span className="text-muted-foreground truncate pr-2">{item.name} x{item.quantity}</span>
+                    <span>₹{(item.price * item.quantity).toFixed(2)}</span>
+                  </div>
+                )
+              ))}
+            </div>
+            <Separator />
+            <div className="space-y-2 my-4 text-sm">
+              <div className="flex justify-between font-medium">
+                <span>Subtotal</span>
+                <span>₹{subtotal.toFixed(2)}</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Shipping & Handling</span>
+                <span>₹0.00</span>
+              </div>
+               <div className="flex justify-between">
+                <span>Taxes</span>
+                <span>₹0.00</span>
+              </div>
+            </div>
+            <Separator />
+            <div className="flex justify-between font-bold text-lg my-4">
+              <span>Order Total</span>
               <span>₹{subtotal.toFixed(2)}</span>
             </div>
-            <div className="flex justify-between font-medium">
-              <span>Shipping & Handling</span>
-              <span>₹0.00</span>
-            </div>
-            <div className="flex justify-between font-medium">
-              <span>Taxes</span>
-              <span>₹0.00</span>
-            </div>
-          </div>
-          <Separator />
-          <div className="flex justify-between font-bold text-xl my-4">
-            <span>Order Total</span>
-            <span>₹{subtotal.toFixed(2)}</span>
-          </div>
-          <p className="text-xs text-muted-foreground text-center mb-6">
-            This is a demo application. No real payment will be processed.
-          </p>
-          <Button onClick={handleConfirm} size="lg" className="w-full">
-            Confirm Purchase
-          </Button>
-        </CardContent>
-      </Card>
+          </CardContent>
+          <CardFooter className="flex-col items-stretch gap-4 mt-auto">
+             <p className="text-xs text-muted-foreground text-center">
+              This is a demo application. No real payment will be processed.
+            </p>
+            <Button onClick={handleConfirm} size="lg" className="w-full" disabled={isProcessing}>
+              {isProcessing ? "Processing..." : "Confirm Purchase"}
+            </Button>
+          </CardFooter>
+        </Card>
+      </div>
     </div>
   );
 }
+

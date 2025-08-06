@@ -4,7 +4,6 @@
 import { useEffect, useState } from "react";
 import { useAppContext } from "@/context/app-context";
 import { useRouter } from "next/navigation";
-import { getUserDetails, type UserDetails } from "@/actions/users";
 import {
   Card,
   CardContent,
@@ -16,31 +15,16 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { User, Mail, Phone, Home } from "lucide-react";
 
 export default function ProfilePage() {
-  const { user, userLoading } = useAppContext();
+  const { user, userDetails, userLoading } = useAppContext();
   const router = useRouter();
-  const [userDetails, setUserDetails] = useState<UserDetails | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (userLoading) {
-      return;
-    }
-    if (!user) {
+    if (!userLoading && !user) {
       router.push("/login");
-      return;
     }
-
-    const fetchUserDetails = async () => {
-      setIsLoading(true);
-      const details = await getUserDetails(user.uid);
-      setUserDetails(details);
-      setIsLoading(false);
-    };
-
-    fetchUserDetails();
   }, [user, userLoading, router]);
 
-  if (isLoading || userLoading) {
+  if (userLoading) {
     return (
       <div className="container mx-auto px-4 py-12 max-w-2xl">
         <h1 className="text-3xl md:text-4xl font-bold tracking-tight mb-8">
@@ -70,10 +54,10 @@ export default function ProfilePage() {
     );
   }
 
-  if (!userDetails) {
+  if (!user || !userDetails) {
     return (
       <div className="container mx-auto px-4 py-12 text-center">
-        <p>Could not load user profile.</p>
+        <p>Could not load user profile. Please try logging in again.</p>
       </div>
     );
   }

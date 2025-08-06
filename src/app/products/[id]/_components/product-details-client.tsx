@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect } from "react";
@@ -15,6 +16,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import ProductReviews from "./product-reviews";
 
 interface ProductDetailsClientProps {
   product: Product;
@@ -87,6 +89,7 @@ export default function ProductDetailsClient({ product }: ProductDetailsClientPr
           </div>
         </div>
       </div>
+      <ProductReviews reviews={product.reviews || []} />
       <Recommendations currentProductId={product.id} />
     </div>
   );

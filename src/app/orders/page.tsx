@@ -5,7 +5,7 @@ import { useAppContext } from "@/context/app-context";
 import { useRouter } from "next/navigation";
 import { db } from "@/lib/firebase";
 import { collection, query, where, getDocs, orderBy } from "firebase/firestore";
-import { products, type Product } from "@/lib/data";
+import { products } from "@/lib/data";
 import {
   Card,
   CardContent,
@@ -125,7 +125,7 @@ export default function OrdersPage() {
                   return (
                     <div key={item.id} className="flex items-center gap-4">
                        <div className="relative w-16 h-16 rounded-md overflow-hidden border">
-                          <Image src={product.image} alt={product.name} fill className="object-cover" data-ai-hint={product.aiHint}/>
+                          <Image src={product.images[0]} alt={product.name} fill className="object-cover" data-ai-hint={product.aiHint}/>
                         </div>
                       <div className="flex-1">
                         <p className="font-medium">{product.name}</p>

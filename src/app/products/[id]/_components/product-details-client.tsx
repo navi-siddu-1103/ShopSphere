@@ -8,6 +8,13 @@ import { Separator } from "@/components/ui/separator";
 import Recommendations from "@/components/recommendations";
 import { useAppContext } from "@/context/app-context";
 import type { Product } from "@/lib/data";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 
 interface ProductDetailsClientProps {
   product: Product;
@@ -24,13 +31,29 @@ export default function ProductDetailsClient({ product }: ProductDetailsClientPr
     <div className="container mx-auto px-4 py-12">
       <div className="grid md:grid-cols-2 gap-12 items-start">
         <div className="aspect-square relative bg-card rounded-lg overflow-hidden border">
-          <Image
-            src={product.image}
-            alt={product.name}
-            fill
-            className="object-cover"
-            data-ai-hint={product.aiHint}
-          />
+           <Carousel className="w-full h-full">
+            <CarouselContent>
+              {product.images.map((imgSrc, index) => (
+                <CarouselItem key={index}>
+                  <div className="relative w-full h-full aspect-square">
+                    <Image
+                      src={imgSrc}
+                      alt={`${product.name} image ${index + 1}`}
+                      fill
+                      className="object-cover"
+                      data-ai-hint={product.aiHint}
+                    />
+                  </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            {product.images.length > 1 && (
+              <>
+                <CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2" />
+                <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2" />
+              </>
+            )}
+          </Carousel>
         </div>
         <div className="flex flex-col h-full">
           <h1 className="text-3xl md:text-4xl font-bold tracking-tight">{product.name}</h1>

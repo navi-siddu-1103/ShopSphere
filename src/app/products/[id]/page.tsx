@@ -26,7 +26,13 @@ export default function ProductPage({ params }: ProductPageProps) {
     notFound();
   }
 
-  return <ProductDetailsClient product={product} />;
+  // Ensure images is an array
+  const productWithImages = {
+    ...product,
+    images: Array.isArray(product.images) ? product.images : [product.images],
+  };
+
+  return <ProductDetailsClient product={productWithImages} />;
 }
 
 export async function generateStaticParams() {

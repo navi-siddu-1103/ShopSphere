@@ -27,7 +27,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         <Link href={`/products/${product.id}`} className="block">
           <div className="aspect-video relative">
             <Image
-              src={product.image}
+              src={product.images[0]}
               alt={product.name}
               fill
               className="object-cover"

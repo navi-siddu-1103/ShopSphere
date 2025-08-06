@@ -49,7 +49,7 @@ export default function CartPage() {
             <Card key={item.id} className="overflow-hidden">
               <div className="flex items-center p-4 gap-4">
                 <div className="relative w-24 h-24 rounded-md overflow-hidden">
-                  <Image src={item.image} alt={item.name} fill className="object-cover" data-ai-hint={item.aiHint}/>
+                  <Image src={item.images[0]} alt={item.name} fill className="object-cover" data-ai-hint={item.aiHint}/>
                 </div>
                 <div className="flex-1">
                   <h2 className="font-semibold">{item.name}</h2>

@@ -138,8 +138,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const addToViewed = (productId: string) => {
     setViewedProducts((prev) => {
       const newViewed = prev.filter(id => id !== productId);
-      newViewed.push(productId);
-      return newViewed.slice(-10); // Keep last 10
+      newViewed.unshift(productId); // Add to the beginning
+      return newViewed.slice(0, 5); // Keep last 5 viewed products
     });
   };
 

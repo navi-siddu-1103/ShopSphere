@@ -1,7 +1,7 @@
 
 "use client";
 
-import { createContext, useContext, ReactNode, useState, useEffect, useRef, useCallback } from "react";
+import { createContext, useContext, ReactNode, useState, useEffect, useCallback, useRef } from "react";
 import type { Product } from "@/lib/data";
 import { useLocalStorage } from "@/hooks/use-local-storage";
 import { useToast } from "@/hooks/use-toast";
@@ -10,6 +10,7 @@ import type { User } from "firebase/auth";
 import { onAuthStateChanged } from "firebase/auth";
 import { getCart, updateCart } from "@/actions/cart";
 import { getUserDetails, type UserDetails } from "@/actions/users";
+import { useRouter } from "next/navigation";
 
 
 export type CartItem = {
@@ -26,6 +27,7 @@ type AppContextType = {
   removeFromCart: (productId:string) => void;
   updateItemQuantity: (productId: string, quantity: number) => void;
   clearCart: () => void;
+  buyNow: (productId: string) => void;
   viewedProducts: string[];
   addToViewed: (productId: string) => void;
 };
@@ -42,14 +44,15 @@ export function AppProvider({ children }: { children: ReactNode }) {
     []
   );
   const { toast } = useToast();
-  const isSyncing = useRef(false);
-  const userRef = useRef(user); // Use ref to track user without causing re-renders in effects
+  const router = useRouter();
 
+  const userRef = useRef(user);
   useEffect(() => {
     userRef.current = user;
   }, [user]);
 
-  // Set up Firebase auth listener once on mount
+  const isSyncing = useRef(false);
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
@@ -58,15 +61,13 @@ export function AppProvider({ children }: { children: ReactNode }) {
         setUserDetails(details);
       } else {
         setUserDetails(null);
-        setCart([]); // Clear cart on logout
+        // Do not clear cart on logout, so guest cart persists until login
       }
       setUserLoading(false);
     });
-    // Cleanup subscription on unmount
     return () => unsubscribe();
-  }, [setCart]);
+  }, []);
 
-  // Sync cart when user logs in
   useEffect(() => {
     const syncCart = async () => {
       if (user && !isSyncing.current) {
@@ -78,15 +79,12 @@ export function AppProvider({ children }: { children: ReactNode }) {
           const firestoreCart = await getCart(user.uid);
 
           const mergedCartMap = new Map<string, CartItem>();
-
-          // Add firestore items first
+          
           firestoreCart.forEach(item => mergedCartMap.set(item.id, item));
           
-          // Merge local items
           localCart.forEach((localItem: CartItem) => {
             const firestoreItem = mergedCartMap.get(localItem.id);
             if (firestoreItem) {
-                // If item exists in both, take the larger quantity
                 mergedCartMap.set(localItem.id, {
                     ...localItem,
                     quantity: Math.max(localItem.quantity, firestoreItem.quantity)
@@ -98,7 +96,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
           const finalCart = Array.from(mergedCartMap.values());
           
-          // Update state and persistence layers
           setCart(finalCart);
           await updateCart(user.uid, finalCart);
 
@@ -116,14 +113,12 @@ export function AppProvider({ children }: { children: ReactNode }) {
     }
   }, [user, userLoading, setCart]);
 
-
   const handleCartUpdate = useCallback((newCart: CartItem[]) => {
     setCart(newCart);
-    if(userRef.current) {
+    if (userRef.current) {
       updateCart(userRef.current.uid, newCart);
     }
-  },[setCart]);
-
+  }, [setCart]);
 
   const addToCart = useCallback((productId: string, quantity = 1) => {
     setCart(prevCart => {
@@ -138,7 +133,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
       } else {
           newCart = [...prevCart, { id: productId, quantity }];
       }
-      if(userRef.current) {
+      if (userRef.current) {
         updateCart(userRef.current.uid, newCart);
       }
       toast({
@@ -170,6 +165,12 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const clearCart = useCallback(() => {
     handleCartUpdate([]);
   }, [handleCartUpdate]);
+  
+  const buyNow = useCallback((productId: string) => {
+    const newCart = [{ id: productId, quantity: 1 }];
+    handleCartUpdate(newCart);
+    router.push('/checkout');
+  }, [handleCartUpdate, router]);
 
   const addToViewed = useCallback((productId: string) => {
     setViewedProducts((prev) => {
@@ -188,6 +189,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     removeFromCart,
     updateItemQuantity,
     clearCart,
+    buyNow,
     viewedProducts,
     addToViewed,
   };

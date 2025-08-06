@@ -3,7 +3,7 @@
 
 import { useEffect } from "react";
 import Image from "next/image";
-import { Star, ShoppingCart } from "lucide-react";
+import { Star, ShoppingCart, Bolt } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import Recommendations from "@/components/recommendations";
@@ -23,7 +23,7 @@ interface ProductDetailsClientProps {
 }
 
 export default function ProductDetailsClient({ product }: ProductDetailsClientProps) {
-  const { addToCart, addToViewed } = useAppContext();
+  const { addToCart, addToViewed, buyNow } = useAppContext();
 
   useEffect(() => {
     addToViewed(product.id);
@@ -81,10 +81,14 @@ export default function ProductDetailsClient({ product }: ProductDetailsClientPr
           <p className="mt-4 text-muted-foreground leading-relaxed">
             {product.description}
           </p>
-          <div className="mt-auto pt-6">
-            <Button size="lg" className="w-full" onClick={() => addToCart(product.id)}>
+          <div className="mt-auto pt-6 grid grid-cols-2 gap-4">
+            <Button size="lg" variant="outline" className="w-full" onClick={() => addToCart(product.id)}>
               <ShoppingCart className="mr-2 h-5 w-5" />
               Add to Cart
+            </Button>
+            <Button size="lg" className="w-full" onClick={() => buyNow(product.id)}>
+              <Bolt className="mr-2 h-5 w-5" />
+              Buy Now
             </Button>
           </div>
         </div>

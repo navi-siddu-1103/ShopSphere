@@ -3,7 +3,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Star, ShoppingCart } from "lucide-react";
+import { Star, ShoppingCart, Bolt } from "lucide-react";
 import type { Product } from "@/lib/data";
 import {
   Card,
@@ -22,7 +22,7 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({ product, className }: ProductCardProps) {
-  const { addToCart } = useAppContext();
+  const { addToCart, buyNow } = useAppContext();
 
   return (
     <Card className={cn("flex flex-col h-full overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1", className)}>
@@ -53,10 +53,14 @@ export default function ProductCard({ product, className }: ProductCardProps) {
           </div>
         </div>
       </CardContent>
-      <CardFooter className="p-4 pt-0">
-        <Button className="w-full" onClick={() => addToCart(product.id)}>
+      <CardFooter className="p-4 pt-0 grid grid-cols-2 gap-2">
+        <Button variant="outline" className="w-full" onClick={() => addToCart(product.id)}>
           <ShoppingCart className="mr-2 h-4 w-4" />
           Add to Cart
+        </Button>
+        <Button className="w-full" onClick={() => buyNow(product.id)}>
+          <Bolt className="mr-2 h-4 w-4" />
+          Buy Now
         </Button>
       </CardFooter>
     </Card>

@@ -41,49 +41,69 @@ export function AppProvider({ children }: { children: ReactNode }) {
     "viewedProducts",
     []
   );
+  const [isCartSynced, setIsCartSynced] = useState(false);
   const { toast } = useToast();
-
-  const syncCartWithFirestore = useCallback(async (uid: string, localCart: CartItem[]) => {
-      try {
-        const firestoreCart = await getCart(uid);
-        
-        // Merge local and firestore carts
-        const mergedCart = [...localCart];
-        firestoreCart.forEach(firestoreItem => {
-          const localItem = mergedCart.find(item => item.id === firestoreItem.id);
-          if (localItem) {
-            // If item exists in both, use the higher quantity
-            localItem.quantity = Math.max(localItem.quantity, firestoreItem.quantity);
-          } else {
-            mergedCart.push(firestoreItem);
-          }
-        });
-        
-        setCart(mergedCart); // Update local state and localStorage
-        await updateCart(uid, mergedCart); // Sync merged cart back to Firestore
-
-      } catch (error) {
-        console.error("Failed to sync cart with Firestore:", error);
-      }
-  }, [setCart]);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      setUserLoading(true);
       setUser(currentUser);
       if (currentUser) {
         const details = await getUserDetails(currentUser.uid);
         setUserDetails(details);
-        // User is logged in, sync carts
-        const localCart = JSON.parse(window.localStorage.getItem("cart") || "[]");
-        await syncCartWithFirestore(currentUser.uid, localCart);
+        // Reset sync status on user change
+        setIsCartSynced(false); 
       } else {
         // User logged out
         setUserDetails(null);
+        setCart([]); // Clear cart on logout
+        setIsCartSynced(true); // No cart to sync
       }
       setUserLoading(false);
     });
     return () => unsubscribe();
-  }, [syncCartWithFirestore]);
+  }, [setCart]);
+
+  // Effect for syncing cart after user login
+  useEffect(() => {
+    if (user && !isCartSynced) {
+      const syncCart = async () => {
+        try {
+          const localCart = JSON.parse(window.localStorage.getItem('cart') || '[]');
+          const firestoreCart = await getCart(user.uid);
+
+          const mergedCartMap = new Map<string, CartItem>();
+
+          // Process firestore cart first
+          firestoreCart.forEach(item => mergedCartMap.set(item.id, item));
+          
+          // Merge local cart, using higher quantity if conflict
+          localCart.forEach(localItem => {
+            const firestoreItem = mergedCartMap.get(localItem.id);
+            if (firestoreItem) {
+                mergedCartMap.set(localItem.id, {
+                    ...localItem,
+                    quantity: Math.max(localItem.quantity, firestoreItem.quantity)
+                });
+            } else {
+                mergedCartMap.set(localItem.id, localItem);
+            }
+          });
+
+          const finalCart = Array.from(mergedCartMap.values());
+          
+          setCart(finalCart); // Update local state and localStorage
+          await updateCart(user.uid, finalCart); // Sync merged cart back to Firestore
+        } catch (error) {
+          console.error("Failed to sync cart with Firestore:", error);
+        } finally {
+            setIsCartSynced(true); // Mark as synced
+        }
+      };
+      syncCart();
+    }
+  }, [user, isCartSynced, setCart]);
+
 
   const handleCartUpdate = useCallback((newCart: CartItem[]) => {
     setCart(newCart);

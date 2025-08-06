@@ -23,6 +23,7 @@ import {
   SheetTrigger,
   SheetClose,
 } from "@/components/ui/sheet";
+import { ThemeToggle } from "../theme-toggle";
 
 export default function Header() {
   const { user, userLoading, cart } = useAppContext();
@@ -145,7 +146,8 @@ export default function Header() {
               </>
             )}
           </nav>
-           <div className="hidden md:flex items-center">
+           <div className="hidden md:flex items-center space-x-2">
+            <ThemeToggle />
             {userLoading ? (
               <div className="w-8 h-8 bg-muted rounded-full animate-pulse" />
             ) : user ? (

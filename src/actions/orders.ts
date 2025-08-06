@@ -15,7 +15,11 @@ type OrderPayload = {
       email: string;
       phone?: string;
       address: string;
-  }
+  };
+  discount?: {
+    code: string;
+    amount: number;
+  };
 };
 
 export async function createOrder(payload: OrderPayload): Promise<{ orderId: string } | { error: string }> {
@@ -44,6 +48,7 @@ export async function createOrder(payload: OrderPayload): Promise<{ orderId: str
       items: itemsWithPrice,
       total: payload.total,
       shippingDetails: payload.shippingDetails,
+      discount: payload.discount || null,
       createdAt: serverTimestamp(),
       status: "pending"
     });

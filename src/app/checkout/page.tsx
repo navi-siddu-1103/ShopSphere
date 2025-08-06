@@ -29,6 +29,8 @@ export default function CheckoutPage() {
   
   const [paymentMethod, setPaymentMethod] = useState("card");
   const [isProcessing, setIsProcessing] = useState(false);
+  const [discountCode, setDiscountCode] = useState("");
+  const [discountAmount, setDiscountAmount] = useState(0);
 
   useEffect(() => {
     if (!userLoading) {
@@ -63,6 +65,27 @@ export default function CheckoutPage() {
     0
   );
 
+  const total = subtotal - discountAmount;
+
+  const handleApplyDiscount = () => {
+    if (discountCode.toUpperCase() === "SAVE10") {
+      const discount = subtotal * 0.10;
+      setDiscountAmount(discount);
+      toast({
+        title: "Discount applied!",
+        description: `You saved ₹${discount.toFixed(2)}.`,
+      });
+    } else {
+      setDiscountAmount(0);
+      toast({
+        title: "Invalid Code",
+        description: "The discount code you entered is not valid.",
+        variant: "destructive"
+      });
+    }
+  };
+
+
   const handleConfirm = async () => {
     // Basic validation
     if (!shippingDetails.name || !shippingDetails.email || !shippingDetails.address) {
@@ -79,8 +102,9 @@ export default function CheckoutPage() {
     const result = await createOrder({
       userId: user?.uid || "guest", // Use "guest" for non-logged-in users
       items: cart,
-      total: subtotal,
+      total: total,
       shippingDetails, // Pass shipping details to the order
+      discount: discountAmount > 0 ? { code: discountCode, amount: discountAmount } : undefined,
     });
 
     if ("orderId" in result) {
@@ -211,24 +235,39 @@ export default function CheckoutPage() {
               ))}
             </div>
             <Separator />
+            <div className="flex gap-2">
+              <Input
+                placeholder="Discount code"
+                value={discountCode}
+                onChange={(e) => setDiscountCode(e.target.value)}
+              />
+              <Button onClick={handleApplyDiscount} variant="outline">Apply</Button>
+            </div>
+             <Separator />
             <div className="space-y-2 my-4 text-sm">
               <div className="flex justify-between font-medium">
                 <span>Subtotal</span>
                 <span>₹{subtotal.toFixed(2)}</span>
               </div>
+              {discountAmount > 0 && (
+                <div className="flex justify-between text-green-600">
+                    <span>Discount</span>
+                    <span>-₹{discountAmount.toFixed(2)}</span>
+                </div>
+              )}
               <div className="flex justify-between">
                 <span>Shipping & Handling</span>
                 <span>₹0.00</span>
               </div>
                <div className="flex justify-between">
                 <span>Taxes</span>
-                <span>₹0.00</span>
+                <span>Calculated at next step</span>
               </div>
             </div>
             <Separator />
             <div className="flex justify-between font-bold text-lg my-4">
               <span>Order Total</span>
-              <span>₹{subtotal.toFixed(2)}</span>
+              <span>₹{total.toFixed(2)}</span>
             </div>
           </CardContent>
           <CardFooter className="flex-col items-stretch gap-4 mt-auto">
@@ -241,5 +280,3 @@ export default function CheckoutPage() {
     </div>
   );
 }
-
-    

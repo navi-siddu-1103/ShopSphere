@@ -31,7 +31,7 @@ export default function Header() {
     if (isClient) {
       setCartCount(getCartCount());
     }
-  }, [getCartCount, isClient, cart]);
+  }, [isClient, cart, getCartCount]);
   
   const handleSignOut = async () => {
     await signOut(auth);

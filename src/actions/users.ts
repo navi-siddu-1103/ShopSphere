@@ -1,7 +1,8 @@
+
 'use server';
 
 import {db} from '@/lib/firebase';
-import {doc, getDoc, setDoc} from 'firebase/firestore';
+import {collection, doc, getDoc, getDocs, setDoc} from 'firebase/firestore';
 
 export type UserDetails = {
   uid: string;
@@ -10,6 +11,27 @@ export type UserDetails = {
   phone?: string;
   address?: string;
 };
+
+export async function getAllUsers(): Promise<UserDetails[]> {
+  try {
+    const usersCollection = collection(db, 'users');
+    const userSnapshot = await getDocs(usersCollection);
+    const userList = userSnapshot.docs.map(doc => {
+      const data = doc.data();
+      return {
+        uid: doc.id,
+        email: data.email,
+        firstName: data.firstName,
+        phone: data.phone,
+        address: data.address,
+      };
+    });
+    return userList;
+  } catch (error) {
+    console.error('Error fetching all users:', error);
+    return [];
+  }
+}
 
 export async function getUserDetails(
   uid: string

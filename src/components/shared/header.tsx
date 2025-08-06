@@ -2,7 +2,7 @@
 "use client";
 
 import Link from "next/link";
-import { ShoppingCart, Store, User as UserIcon, LogOut, LogIn, Rows3, Menu } from "lucide-react";
+import { ShoppingCart, Store, User as UserIcon, LogOut, LogIn, Rows3, Menu, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAppContext } from "@/context/app-context";
 import { useEffect, useState } from "react";
@@ -75,6 +75,12 @@ export default function Header() {
                       <span>My Orders</span>
                     </Link>
                 </SheetClose>
+                 <SheetClose asChild>
+                   <Link href="/admin" className="flex items-center gap-2 p-2 rounded-md hover:bg-muted">
+                      <Shield className="mr-2 h-4 w-4" />
+                      <span>Admin</span>
+                    </Link>
+                </SheetClose>
               </>
             ) : (
               <SheetClose asChild>
@@ -144,6 +150,12 @@ export default function Header() {
                     <Link href="/orders">
                       <Rows3 className="mr-2 h-4 w-4" />
                       <span>My Orders</span>
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href="/admin">
+                      <Shield className="mr-2 h-4 w-4" />
+                      <span>Admin</span>
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />

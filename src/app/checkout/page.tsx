@@ -13,6 +13,7 @@ import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 export default function CheckoutPage() {
   const { cart, clearCart, user, userDetails, userLoading } = useAppContext();
@@ -26,6 +27,7 @@ export default function CheckoutPage() {
     address: "",
   });
   
+  const [paymentMethod, setPaymentMethod] = useState("card");
   const [isProcessing, setIsProcessing] = useState(false);
 
   useEffect(() => {
@@ -96,7 +98,7 @@ export default function CheckoutPage() {
 
   if (userLoading) {
     return (
-      <div className="container mx-auto px-4 py-12 max-w-2xl text-center">
+      <div className="container mx-auto px-4 py-12 max-w-4xl text-center">
         <p>Loading...</p>
       </div>
     );
@@ -110,38 +112,90 @@ export default function CheckoutPage() {
   return (
     <div className="container mx-auto px-4 py-12">
       <h1 className="text-3xl md:text-4xl font-bold tracking-tight mb-8 text-center">Checkout</h1>
-      <div className="grid md:grid-cols-2 gap-12">
+      <div className="grid lg:grid-cols-3 gap-12">
         
-        {/* Shipping Details */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Shipping Information</CardTitle>
-            <CardDescription>
-                {user ? "Please confirm your details for shipping." : "Enter your details for guest checkout."}
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-             <div className="grid gap-2">
-                <Label htmlFor="name">Full Name</Label>
-                <Input id="name" value={shippingDetails.name} onChange={handleInputChange} required />
-            </div>
-             <div className="grid gap-2">
-                <Label htmlFor="email">Email Address</Label>
-                <Input id="email" type="email" value={shippingDetails.email} onChange={handleInputChange} required />
-            </div>
-            <div className="grid gap-2">
-                <Label htmlFor="phone">Phone Number (Optional)</Label>
-                <Input id="phone" type="tel" value={shippingDetails.phone} onChange={handleInputChange} />
-            </div>
-            <div className="grid gap-2">
-                <Label htmlFor="address">Shipping Address</Label>
-                <Textarea id="address" value={shippingDetails.address} onChange={handleInputChange} required />
-            </div>
-          </CardContent>
-        </Card>
+        <div className="lg:col-span-2 space-y-8">
+            {/* Shipping Details */}
+            <Card>
+            <CardHeader>
+                <CardTitle>Shipping Information</CardTitle>
+                <CardDescription>
+                    {user ? "Please confirm your details for shipping." : "Enter your details for guest checkout."}
+                </CardDescription>
+            </CardHeader>
+            <CardContent className="grid md:grid-cols-2 gap-6">
+                <div className="grid gap-2 md:col-span-2">
+                    <Label htmlFor="name">Full Name</Label>
+                    <Input id="name" value={shippingDetails.name} onChange={handleInputChange} required />
+                </div>
+                <div className="grid gap-2">
+                    <Label htmlFor="email">Email Address</Label>
+                    <Input id="email" type="email" value={shippingDetails.email} onChange={handleInputChange} required />
+                </div>
+                <div className="grid gap-2">
+                    <Label htmlFor="phone">Phone Number (Optional)</Label>
+                    <Input id="phone" type="tel" value={shippingDetails.phone} onChange={handleInputChange} />
+                </div>
+                <div className="grid gap-2 md:col-span-2">
+                    <Label htmlFor="address">Shipping Address</Label>
+                    <Textarea id="address" value={shippingDetails.address} onChange={handleInputChange} required />
+                </div>
+            </CardContent>
+            </Card>
+
+            {/* Payment Method */}
+            <Card>
+                <CardHeader>
+                    <CardTitle>Payment Method</CardTitle>
+                    <CardDescription>This is a demo. No real payment will be processed.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <RadioGroup value={paymentMethod} onValueChange={setPaymentMethod} className="grid md:grid-cols-3 gap-4">
+                        <div>
+                            <RadioGroupItem value="card" id="card" className="peer sr-only" />
+                            <Label htmlFor="card" className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary">
+                                Credit/Debit Card
+                            </Label>
+                        </div>
+                         <div>
+                            <RadioGroupItem value="netbanking" id="netbanking" className="peer sr-only" />
+                            <Label htmlFor="netbanking" className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary">
+                                Net Banking
+                            </Label>
+                        </div>
+                        <div>
+                            <RadioGroupItem value="cod" id="cod" className="peer sr-only" />
+                            <Label htmlFor="cod" className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary">
+                                Cash on Delivery
+                            </Label>
+                        </div>
+                    </RadioGroup>
+                    {paymentMethod === 'card' && (
+                        <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div className="grid gap-2 col-span-2">
+                                <Label htmlFor="card-number">Card Number</Label>
+                                <Input id="card-number" placeholder="0000 0000 0000 0000" />
+                            </div>
+                            <div className="grid gap-2 col-span-2">
+                                <Label htmlFor="card-name">Name on Card</Label>
+                                <Input id="card-name" placeholder="John Doe" />
+                            </div>
+                            <div className="grid gap-2">
+                                <Label htmlFor="expiry-date">Expiration Date</Label>
+                                <Input id="expiry-date" placeholder="MM/YY" />
+                            </div>
+                             <div className="grid gap-2">
+                                <Label htmlFor="cvc">CVC</Label>
+                                <Input id="cvc" placeholder="123" />
+                            </div>
+                        </div>
+                    )}
+                </CardContent>
+            </Card>
+        </div>
 
         {/* Order Summary */}
-        <Card className="flex flex-col">
+        <Card className="flex flex-col lg:col-span-1">
           <CardHeader>
             <CardTitle>Order Summary</CardTitle>
           </CardHeader>
@@ -178,9 +232,6 @@ export default function CheckoutPage() {
             </div>
           </CardContent>
           <CardFooter className="flex-col items-stretch gap-4 mt-auto">
-             <p className="text-xs text-muted-foreground text-center">
-              This is a demo application. No real payment will be processed.
-            </p>
             <Button onClick={handleConfirm} size="lg" className="w-full" disabled={isProcessing}>
               {isProcessing ? "Processing..." : "Confirm Purchase"}
             </Button>
@@ -191,3 +242,4 @@ export default function CheckoutPage() {
   );
 }
 
+    

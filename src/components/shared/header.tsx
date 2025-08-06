@@ -61,6 +61,17 @@ export default function Header() {
               <span className="font-bold inline-block">ShopSphere</span>
             </Link>
           <div className="flex flex-col space-y-2 flex-grow">
+            <SheetClose asChild>
+               <Link href="/cart" className="flex items-center gap-2 p-2 rounded-md hover:bg-muted">
+                  <ShoppingCart className="mr-2 h-4 w-4" />
+                  <span>Cart</span>
+                   {isClient && cartCount > 0 && (
+                    <span className="ml-auto flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs">
+                      {cartCount}
+                    </span>
+                  )}
+                </Link>
+            </SheetClose>
             {user ? (
               <>
                 <SheetClose asChild>
@@ -114,8 +125,9 @@ export default function Header() {
           <Store className="h-6 w-6" />
           <span className="font-bold inline-block">ShopSphere</span>
         </Link>
-        <div className="flex flex-1 items-center justify-end space-x-2">
-            <Link href="/cart">
+        <div className="flex flex-1 items-center justify-end space-x-4">
+          <nav className="hidden md:flex items-center space-x-4 text-sm font-medium">
+             <Link href="/cart" className="flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors">
               <Button variant="ghost" size="icon" className="relative">
                 <ShoppingCart className="h-5 w-5" />
                 {isClient && cartCount > 0 && (
@@ -126,7 +138,14 @@ export default function Header() {
                 <span className="sr-only">Shopping Cart</span>
               </Button>
             </Link>
-          <nav className="hidden md:flex items-center">
+            {user && (
+              <>
+                 <Link href="/orders" className="text-muted-foreground hover:text-foreground transition-colors">My Orders</Link>
+                 <Link href="/admin" className="text-muted-foreground hover:text-foreground transition-colors">Admin</Link>
+              </>
+            )}
+          </nav>
+           <div className="hidden md:flex items-center">
             {userLoading ? (
               <div className="w-8 h-8 bg-muted rounded-full animate-pulse" />
             ) : user ? (
@@ -173,7 +192,7 @@ export default function Header() {
                 </Link>
               </Button>
             )}
-          </nav>
+          </div>
         </div>
       </div>
     </header>

@@ -53,13 +53,15 @@ export default function Home() {
       };
 
       recognition.onerror = (event: any) => {
-        console.error("Speech recognition error", event.error);
+        if (event.error !== 'no-speech') {
+          console.error("Speech recognition error", event.error);
+          toast({
+            title: "Voice search error",
+            description: "Sorry, I couldn't understand that. Please try again.",
+            variant: "destructive",
+          });
+        }
         setIsListening(false);
-        toast({
-          title: "Voice search error",
-          description: "Sorry, I couldn't understand that. Please try again.",
-          variant: "destructive",
-        });
       };
 
       recognition.onend = () => {

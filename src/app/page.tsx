@@ -1,10 +1,9 @@
 
 "use client";
 
-import { useState, useMemo, useEffect, useRef } from "react";
-import { products, categories } from "@/lib/data";
+import { useState, useMemo, useEffect, useRef, lazy, Suspense } from "react";
 import type { Product } from "@/lib/data";
-import ProductCard from "@/components/product-card";
+import { categories } from "@/lib/data";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -13,7 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Search, Mic, MicOff, ArrowRight } from "lucide-react";
+import { Search, Mic, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import {
@@ -24,6 +23,23 @@ import {
 } from "@/components/ui/tooltip"
 import RecentlyViewed from "@/components/recently-viewed";
 import Link from "next/link";
+import { Skeleton } from "@/components/ui/skeleton";
+
+const ProductList = lazy(() => import("@/components/product-list"));
+
+const ProductGridSkeleton = () => (
+  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+    {[...Array(8)].map((_, i) => (
+      <div key={i} className="flex flex-col space-y-3">
+        <Skeleton className="h-[200px] w-full rounded-xl" />
+        <div className="space-y-2">
+          <Skeleton className="h-4 w-3/4" />
+          <Skeleton className="h-4 w-1/2" />
+        </div>
+      </div>
+    ))}
+  </div>
+);
 
 
 export default function Home() {
@@ -36,7 +52,6 @@ export default function Home() {
   const recognitionRef = useRef<any>(null);
 
   useEffect(() => {
-    // Check for browser support for SpeechRecognition API
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (SpeechRecognition) {
       recognitionRef.current = new SpeechRecognition();
@@ -97,33 +112,6 @@ export default function Home() {
     }
   };
 
-
-  const filteredAndSortedProducts = useMemo(() => {
-    let filtered = products;
-
-    if (searchTerm) {
-      filtered = filtered.filter((p) =>
-        p.name.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    }
-
-    if (selectedCategory !== "all") {
-      filtered = filtered.filter((p) => p.category === selectedCategory);
-    }
-
-    return filtered.sort((a, b) => {
-      switch (sortOrder) {
-        case "price-asc":
-          return a.price - b.price;
-        case "price-desc":
-          return b.price - a.price;
-        case "rating-desc":
-          return b.rating - a.rating;
-        default:
-          return b.rating - a.rating;
-      }
-    });
-  }, [searchTerm, selectedCategory, sortOrder]);
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -208,18 +196,13 @@ export default function Home() {
           </Select>
         </div>
       </div>
-
-      {filteredAndSortedProducts.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-          {filteredAndSortedProducts.map((product: Product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
-      ) : (
-        <div className="text-center py-16">
-          <p className="text-xl text-muted-foreground">No products found.</p>
-        </div>
-      )}
+      <Suspense fallback={<ProductGridSkeleton />}>
+        <ProductList
+          searchTerm={searchTerm}
+          selectedCategory={selectedCategory}
+          sortOrder={sortOrder}
+        />
+      </Suspense>
     </div>
   );
 }

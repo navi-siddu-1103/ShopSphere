@@ -1,8 +1,7 @@
 
 "use client";
 
-import { useMemo } from "react";
-import { products } from "@/lib/data";
+import { useMemo, useState, useEffect } from "react";
 import type { Product } from "@/lib/data";
 import ProductCard from "@/components/product-card";
 
@@ -13,7 +12,20 @@ interface ProductListProps {
 }
 
 export default function ProductList({ searchTerm, selectedCategory, sortOrder }: ProductListProps) {
+  const [products, setProducts] = useState<Product[]>([]);
+
+  useEffect(() => {
+    // Dynamically import the large products data file
+    import('@/lib/data').then(module => {
+      setProducts(module.products);
+    }).catch(error => console.error("Failed to load products", error));
+  }, []);
+
   const filteredAndSortedProducts = useMemo(() => {
+    if (products.length === 0) {
+      return [];
+    }
+    
     let filtered = products;
 
     if (searchTerm) {
@@ -38,7 +50,12 @@ export default function ProductList({ searchTerm, selectedCategory, sortOrder }:
           return b.rating - a.rating;
       }
     });
-  }, [searchTerm, selectedCategory, sortOrder]);
+  }, [searchTerm, selectedCategory, sortOrder, products]);
+
+  if (products.length === 0) {
+    // This can act as a loading state until the dynamic import is complete
+    return null; 
+  }
 
   return (
     <>
